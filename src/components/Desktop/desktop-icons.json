@@ -1,0 +1,21 @@
+
+[
+    {
+        "title": "File",
+        "extension":".dbg",
+        "img": "",
+        "position": {"x": 40, "y": 50}
+    },
+    {
+        "title": "File",
+        "extension":".dbg",
+        "img": "",
+        "position": {"x": 120, "y": 50}
+    },
+    {
+        "title": "File",
+        "extension":".dbg",
+        "img": "",
+        "position": {"x": 200, "y": 50}
+    }
+]

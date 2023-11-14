@@ -1,4 +1,118 @@
-.App {
+@font-face {
+  font-family: 'w95fa';
+  src: url('assets/fonts/W95FA.otf'), url('assets/fonts/w95fa.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --toolbarHeight: 32px;
+  --toolbarBorderWidth: 3px;
+  --headbarButtonWidth: 20px
+}
+
+* {
+  font-family: 'w95fa';
+  font-size: 14px;
+}
+
+body {
+  background-color: #008080;
+}
+
+.Workspace {
+  user-select: none;
+}
+.Desktop {
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100vh - var(--toolbarHeight));
+}
+.Toolbar{
+  position: fixed;
+  background-color: #c0c0c0;
+  max-height: var(--toolbarHeight);
+  width: calc(100% - var(--toolbarBorderWidth));
+  bottom: 0;
+  border-style: outset;
+  border-width: var(--toolbarBorderWidth);
+  display: flex;
+  justify-content: space-between;
+}
+.Desktop-Icon{
+  transform: translate(-50%,-50%);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 100px;
+  flex-direction: column;
+}
+
+.Desktop-Icon span {
+  margin: 3px;
+  width: inherit;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.Window {
+  transform: translate(-20px,-10px);
+  position: absolute;
+  border-style: outset;
+  border-color: #c0c0c0;
+}
+
+.Window .Header {
+  width: inherit;
+  padding: 2px;
+  height: 20px;
+  background: #000080;
+  border-color: #c0c0c0;
+  border-bottom-style: outset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Window .Header button{
+  background: #c0c0c0;
+  border-color: #c0c0c0;
+  border-bottom-style: outset;
+  width: var(--headbarButtonWidth);
+  margin: 0.5px;
+  padding: 0;
+}
+
+.DragBox {
+  height: 100%;
+  width: calc(100% - calc(calc(var(--headbarButtonWidth) + 1px ) * 3 ));
+  display: flex;
+  align-items: center;
+}
+
+.Window .Area{
+  background: white;
+  height: 150px;
+  width: 150px;
+}
+
+.Toolbar .Clock {
+  border-style: inset;
+}
+
+.Toolbar button {
+  height: var(--toolbarHeight);
+  background-color: #c0c0c0;
+  border-style: outset;
+  margin-right: 2px;
+}
+
+.Toolbar button:active {
+  border-style: inset;
+}
+/* .App {
   text-align: center;
 }
 
@@ -36,3 +150,4 @@
     transform: rotate(360deg);
   }
 }
+ */
