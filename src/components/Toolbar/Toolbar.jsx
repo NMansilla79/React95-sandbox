@@ -1,31 +1,25 @@
 import { useEffect, useState, useContext } from 'react';
-import { mousePositionContext, openedWindows } from '../../App'
+import { openedWindows } from '../../App'
 
 import '../../App.css';
 
-/* const iconWidth = 80
-const iconHeight = 100 */
-
-function Task({props}){
+//Taskbar tasks generated when a new window is opened
+function Task({props,callback = ()=>{}}){//@todo:rearrange order, click to minimize and maximize, double click to expand, move to own file
   return(<>
-      <button>
+      <button onClick={callback} className={props.focused ? "active" : undefined}>
         {props.title} {props.id}
       </button>
   </>)
 }
 
-function Toolbar(){
-  let date = new Date()
-
-  // eslint-disable-next-line no-unused-vars
-  const [mouseCoords,dimensions] = useContext(mousePositionContext);
-  const [windows] = useContext(openedWindows)
-
-  const [clock,setClock] = useState({day: date.toLocaleDateString(), time: date.toLocaleTimeString()})
+//Taskbar clock
+function Clock(){ //@todo: move to own file
+  const stateDate = new Date()
+  const [clock,setClock] = useState({day: stateDate.toLocaleDateString(), time: stateDate.toLocaleTimeString()})
   
   useEffect(()=>{    
     setInterval(()=>{
-      let date = new Date()      
+      const date = new Date()      
       setClock(
         {day: date.toLocaleDateString(), time: date.toLocaleTimeString()}
       )
@@ -33,36 +27,54 @@ function Toolbar(){
     ,1000)
   },[])
 
+  return (
+  <div className='Clock'> 
+    <div>
+      {clock.day}
+    </div>
+    <div>
+      {clock.time}
+    </div>
+  </div>)
+}
+
+//Bottom toolbar component, still pretty much barebone
+//I realized way too late i was calling the windows Taskbar the Toolbar
+function Toolbar(){
+  const [windows,setWindows] = useContext(openedWindows)
+
+  function focusWindow(id){
+    let windowArray = windows.map(window => ({...window}))
+    windowArray.forEach(element => {
+      if(element.id !== id){
+        element.focused = false
+        return
+      }
+      element.focused = true
+    });
+    setWindows(windowArray)
+  }
+  //@todo: Move window management functions to their own component
+  //@todo: Add miniature icons for instanced tasks
+  //@todo: Create and make React95 button open up 
   return(
-  <footer className="Toolbar">
+  <footer className="Toolbar"> 
     
     <div style={{
       display: 'flex'
     }}>
       <button>
         React95
-      {/*   <div>
-          <span>{dimensions.width} {dimensions.height} || { Math.floor(dimensions.width / iconWidth) } {Math.floor(dimensions.height / iconHeight) }</span>
-        </div>
-        <span>{mouseCoords.x} {mouseCoords.y} || {Math.floor(mouseCoords.x / iconWidth)} {Math.floor(mouseCoords.y / iconHeight)}</span> */}
       </button>
 
       {windows?.length > 0 && 
         windows.map(window =>(
-          <Task key={windows.indexOf(window)} props={window}/>
+          <Task key={window.id} props={window} callback={()=>{focusWindow(window.id)}}/>
         ))
       }
       
     </div>
-    
-    <div className='Clock'>
-      <div>
-        {clock.day}
-      </div>
-      <div>
-        {clock.time}
-      </div>
-    </div>
+    <Clock/>
   </footer>)
 }
 

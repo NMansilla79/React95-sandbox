@@ -1,43 +1,44 @@
-import { useEffect, useState, useContext } from 'react';
-import { mousePositionContext } from '../../App'
-
 import '../../App.css';
 
-import HandleLongClick from '../HandleLongClick'
+import HandleLongClick from '../HandleLongClick' //Takes care of detecting when the user is holding down a click, its used for drag and drop
 
-function Window({program,minimize = ()=>{},extend = ()=>{},close = ()=>{}}){
-    const [mouseCoords,dimensions] = useContext(mousePositionContext);
-    const [windowPosition,setWindowPosition] = useState({x: -1000, y: -1000})
-    
-    function adjustPosition(dimensions){
-      const elem = document.getElementById(program.id)
-      const width = dimensions.width / 2 - elem.style.width 
-      const height = dimensions.height / 2 - elem.style.height
-      setWindowPosition({x: width, y: height})
-    }
+function Window({
+    program,//"Program" information given by parent component
+    focused = true, //Changes the style of the focused window to reflect it on the headbar and brings it to the front using zIndex
+    position = {x: 500, y: 500}, //Initial position if none is given
+    //Callbacks for the parent component
+    changePosition = ()=>{},
+    focus = ()=> {}, 
+    minimize = ()=>{}, //@todo: enable and incorporate minimize function
+    extend = ()=>{},  //@todo: enable and incorporate window resize funcion
+    close = ()=>{}
+  })
   
-    useEffect(()=>{
-      adjustPosition(dimensions)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
-  
-    return (
-    <div id={program.id} className='Window' style={{top: windowPosition.y + "px", left: windowPosition.x + "px"}}>
-      <div className='Header'>
-        <div className='DragBox' {...HandleLongClick(()=>{setWindowPosition(mouseCoords)})}>
+  {
+  return (
+    <div onMouseDownCapture={focus} id={program.id} className='Window' style={{top: position.y + "px", left: position.x + "px", zIndex: focused ? 1 : 0}}>
+      <div  className={focused ? 'Header Focused' : 'Header'}>
+        <div className='DragBox' {...HandleLongClick(()=>{changePosition()})}> {/* Drag and drop only works on this section of the window */}
           <b>
             {program.title + program.extension} {program.id}
           </b>
         </div>
-        <div>
-          <button onClick={minimize}>_</button>
-          <button onClick={extend}>{"[]"}</button>
-          <button onClick={close}>X</button>
+        <div className='ButtonBox'>
+          <button disabled onClick={minimize}>
+            <b>_</b>
+          </button>
+          <button disabled onClick={extend}>
+            <b>□</b>
+          </button>
+          <button onClick={close}>
+            <b>X</b>
+          </button>
         </div>
       </div>
       <div className='Area'>
-    </div>
-  </div>)
+        {/* This where the "Program" would go, for now its a 150x150 blank square for debugging */}
+      </div>
+    </div>)
   }
 
   export default Window
